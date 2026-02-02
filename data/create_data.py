@@ -15,4 +15,4 @@ if __name__ == '__main__':
         df.loc[len(df)] = data
 
     print(df)
-    df.to_csv('model2production/data/testing.csv', index=False)
+    df.to_csv('Anomaly-Detection/data/main_data.csv', index=False)
