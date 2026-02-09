@@ -1,8 +1,9 @@
 mlflow.db
-__pycache__
 .git
 .idea
 .ipynb_checkpoints
 mlruns
-project.ipynb
+notebook.ipynb
 venv
+**/__pycache__/
+*.pyc
