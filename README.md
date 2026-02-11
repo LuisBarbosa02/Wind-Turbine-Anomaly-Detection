@@ -3,13 +3,14 @@
 
 ## Table of Contents
 1. [Context](https://github.com/LuisBarbosa02/Anomaly-Detection?tab=readme-ov-file#context)
-2. [How to Use](https://github.com/LuisBarbosa02/Anomaly-Detection?tab=readme-ov-file#how-to-use)
+2. [Installation](https://github.com/LuisBarbosa02/Anomaly-Detection?tab=readme-ov-file#installation)
+3. [Starting Server](https://github.com/LuisBarbosa02/Anomaly-Detection?tab=readme-ov-file#starting-server)
+4. [Model Predictions](https://github.com/LuisBarbosa02/Anomaly-Detection?tab=readme-ov-file#model-predictions)
 
 ## Context
 This project implements a real-time anomaly detection system for a wind turbine factory by using simulated sensor data.
 
-## How to Use
-### Installation
+## Installation
 This repository requires Python 3.12.12
 
 Clone and change to the repository:
@@ -29,27 +30,27 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-### Running Project
-Inside the *Anomaly-Detection* folder, start MLflow to log model and metrics:
+## Starting Server
+The server where the model will be run must be started. This can be done locally or through Docker.
+### Locally
+Inside the *Anomaly-Detection* folder:
 ```bash
-mlflow ui
+uvicorn app.api:app --reload
 ```
 
-Open another terminal and load the venv, then the model can be trained by running the **train_model.py** script on the *model* folder. This can be done by running the following command inside the *Anomaly-Detection* folder:
+### Through Docker
+Within the *Anomaly-Detection* folder, use Dockerfile to create a docker image:
 ```bash
-python -m model.train_model
+docker build -t wind-anomaly-detection .
 ```
 
-Inside MLflow, add the alias "champion" to the main model version.
-
-To run the simulated sensor data on the main model, close the current MLFlow server and serve the registered model locally by running the following command inside the *Anomaly-Detection* folder:
+With the image built, create and run the docker container:
 ```bash
-mlflow models serve \
--m models:/sklearn-isolation-forest-anomaly-clas-model@champion \
--p 5000 \
---env-manager local
+docker run --name wind-anomaly-detection -d -v wind-vol:/app -p 8000:8000 wind-anomaly-detection:latest
 ```
-Then, run outside the *Anomaly-Detection* folder:
+
+## Model Predictions
+With the server running, start the model predictions by running the command inside *Anomaly-Detection*:
 ```bash
-python -m Anomaly-Detection.sensor
+python sensor.py
 ```
