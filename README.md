@@ -1,4 +1,3 @@
-
 # Wind Turbine Anomaly Detection System
 
 ## Table of Contents
@@ -44,7 +43,7 @@ Within the *Anomaly-Detection* folder, use Dockerfile to create a docker image:
 docker build -t wind-anomaly-detection .
 ```
 
-With the image built, create and run the docker container:
+With the image built, create and run the Docker container:
 ```bash
 docker run --name wind-anomaly-detection -d -v wind-vol:/app -p 8000:8000 wind-anomaly-detection:latest
 ```
