@@ -10,16 +10,20 @@ def build_pipeline():
     Function to build full pipeline.
     :return: pipeline
     """
+	# Setting MLflow in Databricks server
+    mlflow.set_tracking_uri("databricks")
+	
     # Load preprocessor
     with open(PREPROCESSOR_PATH, 'rb') as file:
         preprocessor = pickle.load(file)
 
     # Load model
-    model_uri = f"models:/sklearn-isolation-forest-anomaly-detection@champion"
+    model_uri = f"models:/workspace.default.sklearn-isolation-forest-anomaly-detection@champion"
     try:
         model = mlflow.sklearn.load_model(model_uri)
     except:
         print("There is no registed model / There is no 'champion' alias on registed model!")
+		break
 
     # Build full pipeline
     pipeline = Pipeline([

@@ -4,12 +4,13 @@ import pickle
 from ..data.load_data import load_data
 from ..config import PREPROCESSOR_PATH, MODEL_PATH
 from ..model.train_model import model_parameters
-from sklearn.metrics import classification_report
+from ..evaluation.evaluator import make_evaluation
 
 # MLflow experiment
 def run_experiment():
-    # Set experiment
-    mlflow.set_experiment('wind turbine anomaly')
+    # Set experiment in Databricks
+    mlflow.set_tracking_uri("databricks")
+    mlflow.set_experiment('/Shared/wind turbine anomaly')
 
     # Load data
     (_, X_test, _, y_test) = load_data()
@@ -28,15 +29,7 @@ def run_experiment():
         mlflow.log_params(model_parameters)
 
         # Log metrics
-        y_pred = model.predict(preprocessor.transform(X_test))
-        report_dict = classification_report(y_test, y_pred, output_dict=True)
-        metrics = {}
-        for k_1, v_1 in report_dict.items():
-            try:
-                for k_2, v_2 in v_1.items():
-                    metrics[f"{k_1}_{k_2}"] = v_2
-            except:
-                metrics[k_1] = v_1
+        metrics = make_evaluation(preprocessor, model, X_test, y_test)
         mlflow.log_metrics(metrics)
 
         # Log model
