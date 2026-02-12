@@ -30,6 +30,7 @@ jobs:
       run: python -m src.model.build_pipeline
 
   deploy-pipeline:
+    needs: build-pipeline
     runs-on: ubuntu-latest
 
     steps:
