@@ -10,7 +10,7 @@
 This project implements a real-time anomaly detection system for a wind turbine factory by using simulated sensor data.
 
 ## Installation
-This repository requires Python 3.12.12
+This repository requires Python 3.12.12 and Docker.
 
 Clone and change to the repository:
 ```bash
@@ -29,36 +29,12 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-## Create Database
-To store the raw and predicted sensor values, a PostgreSQL database is created through Docker container:
-```bash
-docker pull postgres:18
-docker network create app_network
-docker run -d --name wind_turbine_db -e POSTGRES_USER=luis -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=wind_db -p 5432:5432 -v wind-vol:/var/lib/postgresql --network app_network postgres:18
-```
-
-Then, with the database running, the tables are added by running inside the *Wind-Turbine-Anomaly-Detection* folder:
-```bash
-python -m src.data.create_db_tables
-```
-
 ## Starting Server
-The server where the model will be run must be started. This can be done locally or through Docker.
-### Locally
-Inside the *Wind-Turbine-Anomaly-Detection* folder:
-```bash
-uvicorn app.api:app --reload
-```
+The server where the model will be run and the data saved must be started. This can be done through Docker.
 
-### Through Docker
-Within the *Wind-Turbine-Anomaly-Detection* folder, use Dockerfile to create a docker image:
+Within the *Wind-Turbine-Anomaly-Detection* folder, use **docker-compose.yml** to create and run the Docker containers:
 ```bash
-docker pull luisbarbosa25/wind-turbine-anomaly-detection:latest
-```
-
-With the image built, create and run the Docker container:
-```bash
-docker run --name wind-model -d -v wind-vol:/app -p 8000:8000 luisbarbosa25/wind-turbine-anomaly-detection:latest
+docker compose up -d --build
 ```
 
 ## Model Predictions
