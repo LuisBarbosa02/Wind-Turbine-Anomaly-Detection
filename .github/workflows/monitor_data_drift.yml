@@ -1,0 +1,28 @@
+name: Monitor Data Drift
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Detect drift
+      env:
+        DB_USER: ${{  secrets.DB_USER  }}
+        DB_PASSWORD: ${{  secrets.DB_PASSWORD  }}
+        DB_HOST: ${{  secrets.DB_HOST  }}
+        DB_NAME: ${{  secrets.DB_NAME  }}
+      run: python -m src.evaluation.check_dataset_drift
