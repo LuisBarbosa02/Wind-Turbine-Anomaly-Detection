@@ -7,6 +7,21 @@ jobs:
   check-drift:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: ${{  secrets.DB_USER  }}
+          POSTGRES_PASSWORD: ${{  secrets.DB_PASSWORD  }}
+          POSTGRES_DB: ${{  secrets.DB_NAME  }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }}"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -23,6 +38,6 @@ jobs:
       env:
         DB_USER: ${{  secrets.DB_USER  }}
         DB_PASSWORD: ${{  secrets.DB_PASSWORD  }}
-        DB_HOST: ${{  secrets.DB_HOST  }}
+        DB_HOST: localhost
         DB_NAME: ${{  secrets.DB_NAME  }}
       run: python -m src.evaluation.check_dataset_drift
