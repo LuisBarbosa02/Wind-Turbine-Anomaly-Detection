@@ -8,3 +8,4 @@ pydantic
 databricks-cli
 sqlalchemy
 psycopg2-binary
+evidently
